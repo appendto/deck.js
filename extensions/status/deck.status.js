@@ -21,22 +21,24 @@ This module adds a (current)/(total) style status indicator to the deck.
 	options.selectors.statusTotal
 		The element matching this selector displays the total number of slides.
 	*/
-	$.extend(true, $[deck].defaults, {
+	$[deck].addOptions({
 		selectors: {
 			statusCurrent: '.deck-status-current',
 			statusTotal: '.deck-status-total'
 		}
 	});
 	
-	$d.bind('deck.init', function() {
+	$d.bind([deck] + "init", function( evt ) {
 		// Start on first slide
-		$($[deck]('getOptions').selectors.statusCurrent).text(1);
+		var selectors = $( evt.target )[deck]( "getOptions" ).selectors;
+
+		$( selectors.statusCurrent ).text( 1 );
 		// Set total slides once
-		$($[deck]('getOptions').selectors.statusTotal).text($[deck]('getSlides').length);
+		$( selectors.statusTotal ).text( $( evt.target )[deck]( "getSlides" ).length );
 	})
 	/* Update current slide number with each change event */
-	.bind('deck.change', function(e, from, to) {
-		$($[deck]('getOptions').selectors.statusCurrent).text(to + 1);
+	.bind( [deck] + "change", function(e, from, to) {
+		$( $( e.target )[deck]('getOptions').selectors.statusCurrent).text(to + 1);
 	});
 })(jQuery, 'deck');
 

@@ -1,6 +1,6 @@
 $(function() {
 	// Deck initialization
-	$.deck('.slide');
+	$( ".slide" ).deck();
 	
 	$('#style-themes').change(function() {
 		$('#style-theme-link').attr('href', $(this).val());

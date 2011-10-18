@@ -16,134 +16,92 @@ slides.  More functionality is provided by wholly separate extension modules
 that use the API provided by core.
 */
 (function($, deck, document, undefined) {
-	var slides, // Array of all the uh, slides...
-	current, // Array index of the current slide
-	
-	events = {
-		/*
-		This event fires whenever the current slide changes, whether by way of
-		next, prev, or go. The callback function is passed two parameters, from
-		and to, equal to the indices of the old slide and the new slide
-		respectively.
-		
-		$(document).bind('deck.change', function(event, from, to) {
-		   alert('Moving from slide ' + from + ' to ' + to);
-		});
-		*/
-		change: 'deck.change',
-		
-		/*
-		This event fires at the end of deck initialization. Extensions should
-		implement any code that relies on user extensible options (key bindings,
-		element selectors, classes) within a handler for this event. Native
-		events associated with Deck JS should be scoped under a .deck event
-		namespace, as with the example below:
-		
-		var $d = $(document);
-		$.deck.defaults.keys.myExtensionKeycode = 70; // 'h'
-		$d.bind('deck.init', function() {
-		   $d.bind('keydown.deck', function(event) {
-		      if (event.which === $.deck.getOptions().keys.myExtensionKeycode) {
-		         // Rock out
-		      }
-		   });
-		});
-		*/
-		initialize: 'deck.init' 
-	},
-	
-	options = {},
-	$d = $(document),
-	
-	/*
-	Internal function. Updates slide and container classes based on which
-	slide is the current slide.
-	*/
-	updateStates = function() {
-		var oc = options.classes,
-		osc = options.selectors.container,
-		$container = $(osc),
-		old = $container.data('onSlide'),
-		$all = $();
-		
-		// Container state
-		$container.removeClass(oc.onPrefix + old)
-			.addClass(oc.onPrefix + current)
-			.data('onSlide', current);
-		
-		// Remove and re-add child-current classes for nesting
-		$('.' + oc.current).parentsUntil(osc).removeClass(oc.childCurrent);
-		slides[current].parentsUntil(osc).addClass(oc.childCurrent);
-		
-		// Remove previous states
-		$.each(slides, function(i, el) {
-			$all = $all.add(el);
-		});
-		$all.removeClass([
-			oc.before,
-			oc.previous,
-			oc.current,
-			oc.next,
-			oc.after
-		].join(" "));
-		
-		// Add new states back in
-		slides[current].addClass(oc.current);
-		if (current > 0) {
-			slides[current-1].addClass(oc.previous);
-		}
-		if (current + 1 < slides.length) {
-			slides[current+1].addClass(oc.next);
-		}
-		if (current > 1) {
-			$.each(slides.slice(0, current - 1), function(i, el) {
-				el.addClass(oc.before);
+	var $d = $(document);
+
+	$.widget( [deck] + "." + [deck], { // add our own namespace, stay out of jQuery's
+		options: {
+			classes: {
+				after: 'deck-after',
+				before: 'deck-before',
+				childCurrent: 'deck-child-current',
+				current: 'deck-current',
+				loading: 'deck-loading',
+				next: 'deck-next',
+				onPrefix: 'on-slide-',
+				previous: 'deck-previous'
+			},
+			
+			selectors: {
+				container: '.deck-container'
+			},
+			
+			slideSelectors : ".slide",
+
+			keys: {
+				// enter, space, page down, right arrow, down arrow,
+				next: [13, 32, 34, 39, 40],
+				// backspace, page up, left arrow, up arrow
+				previous: [8, 33, 37, 38]
+			},
+			
+			touch: {
+				swipeTolerance: 60
+			}
+		},
+		events: {
+			/*
+			This event fires whenever the current slide changes, whether by way of
+			next, prev, or go. The callback function is passed two parameters, from
+			and to, equal to the indices of the old slide and the new slide
+			respectively.
+			
+			$(document).bind('deck.change', function(event, from, to) {
+			   alert('Moving from slide ' + from + ' to ' + to);
 			});
-		}
-		if (current + 2 < slides.length) {
-			$.each(slides.slice(current+2), function(i, el) {
-				el.addClass(oc.after);
+			*/
+			change: 'change',
+			
+			/*
+			This event fires at the end of deck initialization. Extensions should
+			implement any code that relies on user extensible options (key bindings,
+			element selectors, classes) within a handler for this event. Native
+			events associated with Deck JS should be scoped under a .deck event
+			namespace, as with the example below:
+			
+			var $d = $(document);
+			$.deck.defaults.keys.myExtensionKeycode = 70; // 'h'
+			$d.bind('deck.init', function() {
+			   $d.bind('keydown.deck', function(event) {
+				  if (event.which === $.deck.getOptions().keys.myExtensionKeycode) {
+					 // Rock out
+				  }
+			   });
 			});
-		}
-	},
-	
-	/* Methods exposed in the jQuery.deck namespace */
-	methods = {
-		
-		/*
-		jQuery.deck(selector, options)
-		
-		selector: string | jQuery | array
-		options: object, optional
-				
-		Initializes the deck, using each element matched by selector as a slide.
-		May also be passed an array of string selectors or jQuery objects, in
-		which case each selector in the array is considered a slide. The second
-		parameter is an optional options object which will extend the default
-		values.
-		
-		$.deck('.slide');
-		
-		or
-		
-		$.deck([
-		   '#first-slide',
-		   '#second-slide',
-		   '#etc'
-		]);
-		*/	
-		init: function(elements, opts) {
+			*/
+			initialize: 'init'
+		},
+		_create: function() {
 			var startTouch,
 			$c,
 			tolerance,
+			options,
+			slides,
+			current,
 			esp = function(e) {
 				e.stopPropagation();
-			};
+			},
+			elements = this.options.slideSelectors,
+			self = this;
 			
-			options = $.extend(true, {}, $[deck].defaults, opts);
-			slides = [];
-			current = 0;
-			$c = $[deck]('getContainer');
+			this.slides = []; // Array of all the uh, slides...
+			this.current = 0; // Array index of the current slide
+
+			// mapping local vars to widget data
+			options = this.options;
+			slides = this.slides;
+			current = this.current;
+
+			$c = this.element;
 			tolerance = options.touch.swipeTolerance;
 			
 			// Hide the deck while states are being applied to kill transitions
@@ -164,11 +122,11 @@ that use the API provided by core.
 			/* Remove any previous bindings, and rebind key events */
 			$d.unbind('keydown.deck').bind('keydown.deck', function(e) {
 				if (e.which === options.keys.next || $.inArray(e.which, options.keys.next) > -1) {
-					methods.next();
+					self.next();
 					e.preventDefault();
 				}
 				else if (e.which === options.keys.previous || $.inArray(e.which, options.keys.previous) > -1) {
-					methods.prev();
+					self.prev();
 					e.preventDefault();
 				}
 			});
@@ -183,11 +141,11 @@ that use the API provided by core.
 				$.each(e.originalEvent.changedTouches, function(i, t) {
 					if (startTouch && t.identifier === startTouch.identifier) {
 						if (t.screenX - startTouch.screenX > tolerance || t.screenY - startTouch.screenY > tolerance) {
-							$[deck]('prev');
+							self.prev();
 							startTouch = undefined;
 						}
 						else if (t.screenX - startTouch.screenX < -1 * tolerance || t.screenY - startTouch.screenY < -1 * tolerance) {
-							$[deck]('next');
+							self.next();
 							startTouch = undefined;
 						}
 						return false;
@@ -208,13 +166,13 @@ that use the API provided by core.
 			.delegate('input, textarea, select, button, meter, progress, [contentEditable]', 'keydown', esp);
 			
 			/*
-			Kick iframe videos, which dont like to redraw w/ transforms.
+			Kick iframes, which dont like to redraw w/ transforms.
 			Remove this if Webkit ever fixes it.
 			 */
 			$.each(slides, function(i, $el) {
 				$el.unbind('webkitTransitionEnd.deck').bind('webkitTransitionEnd.deck',
 				function(event) {
-					if ($el.hasClass($[deck]('getOptions').classes.current)) {
+					if ($el.hasClass(self.options.classes.current)){
 						var embeds = $(this).find('iframe').css('opacity', 0);
 						window.setTimeout(function() {
 							embeds.css('opacity', 1);
@@ -223,126 +181,192 @@ that use the API provided by core.
 				});
 			});
 			
-			updateStates();
+			this._updateStates();
 			
 			// Show deck again now that slides are in place
 			$c.removeClass(options.classes.loading);
-			$d.trigger(events.initialize);
+			this._trigger(this.events.initialize);
 		},
-		
 		/*
-		jQuery.deck('go', index)
-		
-		index: integer
-		
-		Moves to the slide at the specified index. Index is 0-based, so
-		$.deck('go', 0); will move to the first slide. If index is out of bounds
-		or not a number the call is ignored.
+		Internal function. Updates slide and container classes based on which
+		slide is the current slide.
 		*/
-		go: function(index) {
-			if (typeof index != 'number' || index < 0 || index >= slides.length) return;
+		_updateStates : function() {
+			var oc = this.options.classes,
+				osc = this.element,
+				$container = $(osc),
+				old = $container.data('onSlide'),
+				$all = $(),
+				slides = this.slides,
+				current = this.current;
 			
-			$d.trigger(events.change, [current, index]);
-			current = index;
-			updateStates();
+			// Container state
+			$container.removeClass(oc.onPrefix + old)
+				.addClass(oc.onPrefix + current)
+				.data('onSlide', current);
+			
+			// Remove and re-add child-current classes for nesting
+			$('.' + oc.current).parentsUntil(osc).removeClass(oc.childCurrent);
+			slides[current].parentsUntil(osc).addClass(oc.childCurrent);
+			
+			// Remove previous states
+			$.each(slides, function(i, el) {
+				$all = $all.add(el);
+			});
+			$all.removeClass([
+				oc.before,
+				oc.previous,
+				oc.current,
+				oc.next,
+				oc.after
+			].join(" "));
+			
+			// Add new states back in
+			slides[current].addClass(oc.current);
+			if (this.current > 0) {
+				slides[current-1].addClass(oc.previous);
+			}
+			if (this.current + 1 < slides.length) {
+				slides[current+1].addClass(oc.next);
+			}
+			if (this.current > 1) {
+				$.each(slides.slice(0, current - 1), function(i, el) {
+					el.addClass(oc.before);
+				});
+			}
+			if (this.current + 2 < slides.length) {
+				$.each(slides.slice(this.current+2), function(i, el) {
+					el.addClass(oc.after);
+				});
+			}
+		},
+		// Moves to the slide at the specified index. Index is 0-based, so
+		// $.deck('go', 0); will move to the first slide. If index is out of bounds
+		// or not a number the call is ignored.
+		//
+		go: function(index) {
+			if (typeof index != 'number' || index < 0 || index >= this.slides.length) return;
+			
+			this._trigger(this.events.change, {}, [this.current, index]);
+			this._handleiFrame( this.current, index );
+			this.current = index;
+			this._updateStates();
 		},
 		
-		/*
-		jQuery.deck('next')
-		
-		Moves to the next slide. If the last slide is already active, the call
-		is ignored.
-		*/
+		//
+		// $().deck('next')
+		//
+		// Moves to the next slide. If the last slide is already active, the call
+		// is ignored.
 		next: function() {
-			methods.go(current+1);
+			this.go(this.current+1);
 		},
 		
-		/*
-		jQuery.deck('prev')
-		
-		Moves to the previous slide. If the first slide is already active, the
-		call is ignored.
-		*/
+		//
+		// $().deck('prev')
+		//
+		// Moves to the previous slide. If the first slide is already active, the
+		// call is ignored.
 		prev: function() {
-			methods.go(current-1);
+			this.go(this.current-1);
 		},
 		
-		/*
-		jQuery.deck('getSlide', index)
-		
-		index: integer, optional
-		
-		Returns a jQuery object containing the slide at index. If index is not
-		specified, the current slide is returned.
-		*/
+		//
+		// $().deck('getSlide', index)
+		//
+		// index: integer, optional
+		//
+		// Returns a jQuery object containing the slide at index. If index is not
+		// specified, the current slide is returned.
+		//
 		getSlide: function(index) {
-			var i = typeof index !== 'undefined' ? index : current;
-			if (typeof i != 'number' || i < 0 || i >= slides.length) return null;
-			return slides[i];
+			var i = typeof index !== 'undefined' ? index : this.current;
+			if (typeof i != 'number' || i < 0 || i >= this.slides.length) return null;
+			return this.slides[i];
 		},
 		
-		/*
-		jQuery.deck('getSlides')
-		
-		Returns all slides as an array of jQuery objects.
-		*/
+		//
+		// jQuery().deck('getSlides')
+		//
+		// Returns all slides as an array of jQuery objects.
+		//
 		getSlides: function() {
-			return slides;
+			return this.slides;
 		},
 		
-		/*
-		jQuery.deck('getContainer')
-		
-		Returns a jQuery object containing the deck container as defined by the
-		container option.
-		*/
+		//
+		// jQuery().deck('getContainer')
+		//
+		// Returns a jQuery object containing the deck container as defined by the
+		// container option.
+		//
 		getContainer: function() {
-			return $(options.selectors.container);
+			return $(this.element);
 		},
 		
-		/*
-		jQuery.deck('getOptions')
-		
-		Returns the options object for the deck, including any overrides that
-		were defined at initialization.
-		*/
+		//
+		// jQuery().deck('getOptions')
+		//
+		// Returns the options object for the deck, including any overrides that
+		// were defined at initialization.
+		//
 		getOptions: function() {
-			return options;
+			return this.options;
 		},
 		
-		/*
-		jQuery.deck('extend', name, method)
-		
-		name: string
-		method: function
-		
-		Adds method to the deck namespace with the key of name. This doesn’t
-		give access to any private member data — public methods must still be
-		used within method — but lets extension authors piggyback on the deck
-		namespace rather than pollute jQuery.
-		
-		$.deck('extend', 'alert', function(msg) {
-		   alert(msg);
-		});
+		//
+		// jQuery().deck('extend', name, method)
+		//
+		// name: string
+		// method: function
+		//
+		// Adds method to the deck namespace with the key of name. This doesn’t
+		// give access to any private member data — public methods must still be
+		// used within method — but lets extension authors piggyback on the deck
+		// namespace rather than pollute jQuery.
+		// $.deck('extend', 'alert', function(msg) {
+		//   alert(msg);
+		// });
 
 		// Alerts 'boom'
-		$.deck('alert', 'boom');
-		*/
+		// $.deck('alert', 'boom');
+		//
 		extend: function(name, method) {
-			methods[name] = method;
+			if( !this[name] ){
+				this[name] = method;
+			}
+		},
+
+		_handleiFrame: function( from, to) {
+			/*
+			FF + Transforms + Flash video don't get along...
+			Firefox will reload and start playing certain videos after a
+			transform.  Blanking the src when a previously shown slide goes out
+			of view prevents this.
+			*/
+			var oldFrames = this.getSlide( from ).find('iframe'),
+			newFrames = this.getSlide( to ).find('iframe');
+			
+			oldFrames.each(function() {
+				var $this = $(this),
+				curSrc = $this.attr('src');
+				
+				if(curSrc) {
+					$this.data('deck-src', curSrc).attr('src', '');
+				}
+			});
+			
+			newFrames.each(function() {
+				var $this = $(this),
+				originalSrc = $this.data('deck-src');
+				
+				if (originalSrc) {
+					$this.attr('src', originalSrc);
+				}
+			});
 		}
-	};
-	
-	/* jQuery extension */
-	$[deck] = function(method, arg) {
-		if (methods[method]) {
-			return methods[method].apply(this, Array.prototype.slice.call(arguments, 1));
-		}
-		else {
-			return methods.init(method, arg);
-		}
-	};
-	
+	});
+
 	/*
 	The default settings object for a deck. All deck extensions should extend
 	this object to add defaults for any of their options.
@@ -398,64 +422,14 @@ that use the API provided by core.
 		The number of pixels the users finger must travel to produce a swipe
 		gesture.
 	*/
-	$[deck].defaults = {
-		classes: {
-			after: 'deck-after',
-			before: 'deck-before',
-			childCurrent: 'deck-child-current',
-			current: 'deck-current',
-			loading: 'deck-loading',
-			next: 'deck-next',
-			onPrefix: 'on-slide-',
-			previous: 'deck-previous'
-		},
-		
-		selectors: {
-			container: '.deck-container'
-		},
-		
-		keys: {
-			// enter, space, page down, right arrow, down arrow,
-			next: [13, 32, 34, 39, 40],
-			// backspace, page up, left arrow, up arrow
-			previous: [8, 33, 37, 38]
-		},
-		
-		touch: {
-			swipeTolerance: 60
-		}
-	};
+	//$[deck].defaults = {
+	//};
 	
+	$[deck].addOptions = function( optHash ){
+		$.extend( true, $[deck][deck].prototype.options, optHash );
+	};
+
 	$d.ready(function() {
 		$('html').addClass('ready');
-	});
-	
-	/*
-	FF + Transforms + Flash video don't get along...
-	Firefox will reload and start playing certain videos after a
-	transform.  Blanking the src when a previously shown slide goes out
-	of view prevents this.
-	*/
-	$d.bind('deck.change', function(e, from, to) {
-		var oldFrames = $[deck]('getSlide', from).find('iframe'),
-		newFrames = $[deck]('getSlide', to).find('iframe');
-		
-		oldFrames.each(function() {
-	    	var $this = $(this),
-	    	curSrc = $this.attr('src');
-            
-            if(curSrc) {
-            	$this.data('deck-src', curSrc).attr('src', '');
-            }
-		});
-		
-		newFrames.each(function() {
-			var $this = $(this),
-			originalSrc = $this.data('deck-src');
-			
-			if (originalSrc) {
-				$this.attr('src', originalSrc);
-			}
-		});
 	});
 })(jQuery, 'deck', document);

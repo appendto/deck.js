@@ -29,11 +29,12 @@ slide.
 	*/
 	goByHash = function(str) {
 		var id = str.substr(str.indexOf("#") + 1),
-		slides = $[deck]('getSlides');
+			$deck = $( ":" + [deck] );
+		slides = $deck[deck]('getSlides');
 		
 		$.each(slides, function(i, $el) {
 			if ($el.attr('id') === id) {
-				$[deck]('go', i);
+				$deck[deck]('go', i);
 				return false;
 			}
 		});
@@ -54,20 +55,20 @@ slide.
 		Assigned ids take the form of hashPrefix + slideIndex, e.g., slide-0,
 		slide-12, etc.
 	*/
-	$.extend(true, $[deck].defaults, {
+	$[deck].addOptions({
 		selectors: {
 			hashLink: '.deck-permalink'
 		},
-		
 		hashPrefix: 'slide-'
 	});
 	
 	
-	$d.bind('deck.init', function() {
-	   var opts = $[deck]('getOptions');
+	$d.bind( [deck] + "init", function() {
+		var $deck = $( ":deck-deck" ),
+		opts = $deck[deck]('getOptions'),
 		$internals = $();
 		
-		$.each($[deck]('getSlides'), function(i, $el) {
+		$.each($deck[deck]('getSlides'), function(i, $el) {
 			var hash;
 			
 			/* Hand out ids to the unfortunate slides born without them */
@@ -79,7 +80,7 @@ slide.
 			
 			/* Deep link to slides on init */
 			if (hash === window.location.hash) {
-				$[deck]('go', i);
+				$deck[deck]('go', i);
 			}
 			
 			/* Add internal links to this slide */
@@ -95,17 +96,18 @@ slide.
 		}
 		
 		/* Set up first id container state class */
-		$[deck]('getContainer').addClass(opts.classes.onPrefix + $[deck]('getSlide').attr('id'));
+		$deck[deck]('getContainer').addClass(opts.classes.onPrefix + $deck[deck]('getSlide').attr('id'));
 	})
 	/* Update permalink, address bar, and state class on a slide change */
-	.bind('deck.change', function(e, from, to) {
-		var hash = '#' + $[deck]('getSlide', to).attr('id'),
-		opts = $[deck]('getOptions'),
+	.bind( [deck] + "change", function(e, from, to) {
+		var $deck = $( ":deck-deck" ),
+		hash = '#' + $deck[deck]('getSlide', to).attr('id'),
+		opts = $deck[deck]('getOptions'),
 		osp = opts.classes.onPrefix,
-		$c = $[deck]('getContainer');
+		$c = $deck[deck]('getContainer');
 		
-		$c.removeClass(osp + $[deck]('getSlide', from).attr('id'));
-		$c.addClass(osp + $[deck]('getSlide', to).attr('id'));
+		$c.removeClass(osp + $deck[deck]('getSlide', from).attr('id'));
+		$c.addClass(osp + $deck[deck]('getSlide', to).attr('id'));
 		
 		$(opts.selectors.hashLink).attr('href', hash);
 		if (Modernizr.history) {
