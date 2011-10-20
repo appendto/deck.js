@@ -35,7 +35,7 @@ the deck container.
 		The numeric keycode used to toggle between showing and hiding the Go To
 		Slide form.
 	*/
-	$.extend(true, $[deck].defaults, {
+	$[deck].addOptions({
 		classes: {
 			goto: 'deck-goto'
 		},
@@ -56,7 +56,7 @@ the deck container.
 	Shows the Go To Slide form by adding the class specified by the goto class
 	option to the deck container.
 	*/
-	$[deck]('extend', 'showGoTo', function() {
+	$[deck].extend( 'showGoTo', function() {
 		$[deck]('getContainer').addClass($[deck]('getOptions').classes.goto);
 		$($[deck]('getOptions').selectors.gotoInput).focus();
 	});
@@ -67,7 +67,7 @@ the deck container.
 	Hides the Go To Slide form by removing the class specified by the goto class
 	option from the deck container.
 	*/
-	$[deck]('extend', 'hideGoTo', function() {
+	$[deck].extend( 'hideGoTo', function() {
 		$[deck]('getContainer').removeClass($[deck]('getOptions').classes.goto);
 		$($[deck]('getOptions').selectors.gotoInput).blur();
 	});
@@ -77,38 +77,40 @@ the deck container.
 	
 	Toggles between showing and hiding the Go To Slide form.
 	*/
-	$[deck]('extend', 'toggleGoTo', function() {
+	$[deck].extend( 'toggleGoTo', function() {
 		$[deck]($[deck]('getContainer').hasClass($[deck]('getOptions').classes.goto) ? 'hideGoTo' : 'showGoTo');
 	});
 	
-	$d.bind('deck.init', function() {
+	$d.bind([deck] + 'init', function() {
+		var $deck = $( $[deck].select );
+
 		// Bind key events
 		$d.unbind('keydown.deckgoto').bind('keydown.deckgoto', function(e) {
-			var key = $[deck]('getOptions').keys.goto;
+			var key = $deck[deck]('getOptions').keys.goto;
 			
 			if (e.which === key ||$.inArray(e.which, key) > -1) {
 				e.preventDefault();
-				$[deck]('toggleGoTo');
+				$deck[deck]('toggleGoTo');
 			}
 		});
 		
 		// Process form submittal, go to the slide entered
-		$($[deck]('getOptions').selectors.gotoForm)
+		$($deck[deck]('getOptions').selectors.gotoForm)
 		.unbind('submit.deckgoto')
 		.bind('submit.deckgoto', function(e) {
 			var $field = ($($[deck]('getOptions').selectors.gotoInput)),
 			i = parseInt($field.val(), 10);
 			
 			if (!($.isNaN(i) || i < 1 || i > $[deck]('getSlides').length)) {
-				$[deck]('go', i - 1);
-				$[deck]('hideGoTo');
+				$deck[deck]('go', i - 1);
+				$deck[deck]('hideGoTo');
 				$field.val('');
 			}
 			
 			e.preventDefault();
 		});
 		
-		$($[deck]('getOptions').selectors.gotoInput)
+		$($deck[deck]('getOptions').selectors.gotoInput)
 		.unbind('keydown.deckgoto')
 		.bind('keydown.deckgoto', function(e) {
 			e.stopPropagation();

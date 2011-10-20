@@ -429,6 +429,19 @@ that use the API provided by core.
 		$.extend( true, $[deck][deck].prototype.options, optHash );
 	};
 
+	// add a basic widget extension mechanism. doesnt' account for _superApply
+	// as a base widget factory method would
+	$[deck].extend = function( name, callback ) {
+		if( !$[deck][deck].prototype[name] ) {
+			$[deck][deck].prototype[name] = function() {
+				callback.apply( this, arguments );
+			};
+		}
+	};
+
+	// build a helper for selecting all decks in the page.
+	$[deck].select = ":" + deck + "-" + deck;
+
 	$d.ready(function() {
 		$('html').addClass('ready');
 	});
