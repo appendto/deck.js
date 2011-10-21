@@ -32,11 +32,10 @@ that use the API provided by core.
 			},
 			
 			selectors: {
-				container: '.deck-container'
+				container: '.deck-container',
+				slide: '.slide'
 			},
 			
-			slideSelectors : ".slide",
-
 			keys: {
 				// enter, space, page down, right arrow, down arrow,
 				next: [13, 32, 34, 39, 40],
@@ -90,7 +89,7 @@ that use the API provided by core.
 			esp = function(e) {
 				e.stopPropagation();
 			},
-			elements = this.options.slideSelectors,
+			elements = this.options.selectors.slide,
 			self = this;
 			
 			this.slides = []; // Array of all the uh, slides...

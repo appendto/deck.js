@@ -10,6 +10,8 @@
 	<link rel="stylesheet" href="extensions/status/deck.status.css" type="text/css">
 	<link rel="stylesheet" href="extensions/hash/deck.hash.css" type="text/css">
 	<link rel="stylesheet" href="extensions/goto/deck.goto.css" type="text/css">
+	<link rel="stylesheet" href="extensions/jQuerycode/codemirror.css" type="text/css">
+	<link rel="stylesheet" href="extensions/jQuerycode/defaultcm.css" type="text/css">
 	
 	<!-- Any other extension CSS files go here. -->
 	
@@ -27,7 +29,15 @@
 	<!-- Slide content HTML goes here! -->
 	Hi. There. 2.
 </section>
-
+<section class="slide">
+	Code mirror demo.
+	<!-- for each JS code block create a 'jquery' classed textarea with the code you'd like to run -->
+	<textarea class="jquery" data-code="javascript">$( "#birthdate" ).datepicker();</textarea>
+	<textarea class="demo" data-code="text/html" >
+		<label for="birthdate">Birth Date<em>*</em></label>
+		<input id="birthdate" />
+	</textarea>
+</section>
 
 <!-- Place the following snippet at the bottom of the deck container. -->
 <p class="deck-status">
@@ -53,6 +63,14 @@
 <script src="extensions/status/deck.status.js"></script>
 <script src="extensions/hash/deck.hash.js"></script>
 <script src="extensions/goto/deck.goto.js"></script>
+<script src="extensions/jQuerycode/underscore-min.js"></script>
+<script src="extensions/jQuerycode/codemirror.js"></script>
+<script src="extensions/jQuerycode/mode/javascript/javascript.js"></script>
+<script src="extensions/jQuerycode/mode/xml/xml.js"></script>
+<script src="extensions/jQuerycode/mode/css/css.js"></script>
+<script src="extensions/jQuerycode/mode/htmlmixed/htmlmixed.js"></script>
+<script src="extensions/jQuerycode/jquery.mustache.js"></script>
+<script src="extensions/jQuerycode/deck.jQuerycode.js"></script>
 
 <!-- Add any other extension JS files here -->
 
@@ -63,5 +81,23 @@
 		$( ".deck-container" ).deck();
 	});
 </script>
+
+<!-- add this template to the bottom of the body -->
+<textarea id="jqDemoTemplate" style="display:none;">
+	<!docType html>
+	<html><head></head>
+	<body>
+		{{{ demoBody }}}
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
+		<script>window.jQuery || document.write('<script src="jquery-1.6.4.min.js"><\/script>')</script>
+
+		<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js"></script>
+		<script>window.jQuery.widget || document.write('<script src="jquery-ui-1.8.16.min.js"><\/script>')</script>
+		<script>
+			{{{ demoScript }}}
+		</script>
+	</body>
+	</html>
+</textarea>
 </body>
 </html>

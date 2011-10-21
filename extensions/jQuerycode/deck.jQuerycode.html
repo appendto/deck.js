@@ -1,0 +1,29 @@
+<!-- for each JS code block create a 'jquery' classed textarea with the code you'd like to run -->
+<textarea class="jquery" data-code="javascript">$( "#birthdate" ).datepicker();</textarea>
+<textarea class="demo" data-code="text/html" >
+<label for="birthdate">Birth Date<em>*</em></label>
+<input id="birthdate" />
+</textarea>
+
+<!-- add this template to the bottom of the body -->
+<textarea id="jqDemoTemplate" style="display:none;">
+	<!docType html>
+	<html><head></head>
+	<body>
+	  {{{ demoBody }}}
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
+	<script>window.jQuery || document.write('<script src="jquery-1.6.4.min.js"><\/script>')</script>
+
+	<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js"></script>
+	<script>window.jQuery.widget || document.write('<script src="jquery-ui-1.8.16.min.js"><\/script>')</script>
+		<script>
+			{{{ demoScript }}}
+		</script>
+	</body>
+	</html>
+</textarea>
+<script src="extensions/jQuerycode/underscore-min.js"></script>
+<script src="extensions/jQuerycode/codemirror.js"></script>
+<script src="extensions/jQuerycode/mode/javascript/javascript.js"></script>
+<script src="extensions/jQuerycode/mode/htmlmixed/htmlmixed.js"></script>
+<script src="extensions/jQuerycode/jquery.mustache.js"></script>
