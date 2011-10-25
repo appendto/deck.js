@@ -22,7 +22,7 @@
 						tabMode: "indent",
 						onChange: function() {
 							clearTimeout( jsthrottle );
-							jsthrottle = setTimeout( $deck[deck]( "updatePreview", el ), 500);
+							jsthrottle = setTimeout( $deck[deck]( "updatePreview", el ), 2000);
 						}
 					}));
 
@@ -58,7 +58,7 @@
 		if( !$previewjQ || !$previewDemo ) { return; }
 
 		if( !$previewIFrame.length ) {
-			$previewIFrame = $("<iframe></iframe>" ).insertAfter( sels.slide + " " + sels.demoSnippet );
+			$previewIFrame = $("<iframe></iframe>" ).appendTo( $previewSlide );
 		}
 		var preview = $previewIFrame[0].contentDocument || $previewIFrame[0].contentWindow.document;
 		
