@@ -52,13 +52,22 @@
 			$previewSlide = $(el).closest( sels.slide ),
 			$previewIFrame = $previewSlide.find( "iframe" ),
 			$previewjQ = $previewSlide.find( sels.jqCode ).data( "jqCode" ),
-			$previewDemo = $previewSlide.find( sels.demoSnippet ).data( "htmlSnippet" );
+			$previewDemo = $previewSlide.find( sels.demoSnippet ).data( "htmlSnippet" ),
+			iframeHeight;
 
 		// only build preview if both jq and demo snippet are in the slide
 		if( !$previewjQ || !$previewDemo ) { return; }
 
 		if( !$previewIFrame.length ) {
-			$previewIFrame = $("<iframe></iframe>" ).appendTo( $previewSlide );
+			// determine height based upon remaning slide space
+			// this is expensive but is a one time cost at init
+			iframeHeight = $previewSlide.innerHeight();
+			$previewSlide.children().each( function( i, el ) {
+				iframeHeight -= $(el).outerHeight();
+			});
+			$previewIFrame = $("<iframe></iframe>" )
+				.height( iframeHeight > 250 ? iframeHeight : 250 )
+				.appendTo( $previewSlide );
 		}
 		var preview = $previewIFrame[0].contentDocument || $previewIFrame[0].contentWindow.document;
 		
