@@ -238,6 +238,8 @@ describe('Deck JS', function() {
 			var $d = $(document);
 
 			beforeEach(function() {
+				spyOnEvent($d, 'deck.init');
+				spyOnEvent($d, 'deck.beforeInit');
 				$.deck('.slide');
 				$.deck('go', 1);
 				spyOnEvent($d, 'deck.change');
@@ -268,6 +270,45 @@ describe('Deck JS', function() {
 					$d.bind('deck.change', f);
 					$.deck('go', 3);
 					$d.unbind('deck.change', f);
+				});
+				
+				it('should not change slides if default prevented', function() {
+					$d.bind('deck.change', false);
+					$.deck('go', 3);
+					expect($.deck('getSlide')).toEqual($.deck('getSlide', 1));
+					$d.unbind('deck.change', false);
+				});
+			});
+			
+			describe('deck.init', function() {
+				it('should fire on deck initialization', function() {
+					expect('deck.init').toHaveBeenTriggeredOn($d);
+				});
+				
+				it('should have already populated the slides array', function() {
+					var f = function() {
+						expect($.deck('getSlides').length).toBeGreaterThan(0);
+					};
+					
+					$d.bind('deck.init', f);
+					$.deck('.slide');
+					$d.unbind('deck.init', f);
+				});
+			});
+			
+			describe('deck.beforeInit', function() {
+				it('should fire on deck initialization', function() {
+					expect('deck.beforeInit').toHaveBeenTriggeredOn($d);
+				});
+				
+				it('should have not populated the slides array', function() {
+					var f = function() {
+						expect($.deck('getSlides').length).toEqual(0);
+					};
+					
+					$d.bind('deck.beforeInit', f);
+					$.deck('.slide');
+					$d.unbind('deck.beforeInit', f);
 				});
 			});
 		});
@@ -361,11 +402,11 @@ describe('Deck JS', function() {
 
 		it('should remove/restore iframe sources when leaving/entering a slide', function() {
 			$.deck('go', 4);
-        	expect($.deck('getSlide').find('iframe').attr('src')).toEqual('iframe_simple.html');
+        	expect($.deck('getSlide').find('iframe').attr('src')).toEqual('fixtures/iframe_simple.html');
         	$.deck('next');
         	expect($('.slide5').find('iframe').attr('src')).toEqual('');
             $.deck('prev');
-            expect($('.slide5').find('iframe').attr('src')).toEqual('iframe_simple.html');
+            expect($('.slide5').find('iframe').attr('src')).toEqual('fixtures/iframe_simple.html');
         });
 
 		it('should not store blank iframe sources', function() {
