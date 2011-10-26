@@ -1,0 +1,19 @@
+.cm-s-default span.cm-keyword {color: rgb(255,206,0); }
+.cm-s-default span.cm-atom {}
+.cm-s-default span.cm-number { color: rgb(187,0,255); }
+.cm-s-default span.cm-def {}
+.cm-s-default span.cm-variable {}
+.cm-s-default span.cm-variable-2 {}
+.cm-s-default span.cm-variable-3 {}
+.cm-s-default span.cm-property { color: rgb(0,198,255); }
+.cm-s-default span.cm-operator {}
+.cm-s-default span.cm-comment { color: rgb(150,150,150); }
+.cm-s-default span.cm-string { color: rgb(170,255,0); }
+.cm-s-default span.cm-string-2 {}
+.cm-s-default span.cm-meta {}
+.cm-s-default span.cm-error {}
+.cm-s-default span.cm-qualifier {}
+.cm-s-default span.cm-builtin {}
+.cm-s-default span.cm-bracket {}
+.cm-s-default span.cm-tag { color: rgb(255,206,0); }
+.cm-s-default span.cm-attribute {}
