@@ -3,6 +3,13 @@
   height: auto;
 }
 
+
+/* collapsible */
+.deck-container .slide .collapsibles h3 {
+	text-align: right;
+	cursor: pointer;
+}
+
 /*****
  * CodeMirror
  *****/

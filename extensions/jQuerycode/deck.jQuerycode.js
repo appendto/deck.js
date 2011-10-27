@@ -1,32 +1,35 @@
 (function( $, deck, window, undefined ) {
-	var jsthrottle, htmlthrottle,
-		$d = $(document);
+	var $d = $(document);
 
 	$[deck].addOptions({
 		selectors: {
 			jsSnippet: ".jquery",
 			htmlSnippet: ".demo",
 			cssSnippet: ".demo-css",
+		},
+		jQueryCode: {
+			collapsible: true
 		}
 	});
 
 	$d.bind( [ deck ] + "init", function(){
 		var $deck = $( $[deck].select ),
 			opts = $deck[deck]( "getOptions" ),
-			sels = opts.selectors;
+			sels = opts.selectors,
+			throttle = 0;
 
 		$.each({
-			"js" : {
+			"JavaScript" : {
 				sel: sels.jsSnippet,
 				data: "jsSnippet",
 				mode: "javascript"
 			},
-			"html" : {
+			"HTML" : {
 				sel: sels.htmlSnippet,
 				data: "htmlSnippet",
 				mode: "text/html"
 			},
-			"css" : {
+			"Css" : {
 				sel: sels.cssSnippet,
 				data: "cssSnippet",
 				mode: "text/css"
@@ -41,18 +44,52 @@
 							clearTimeout( throttle );
 							throttle = setTimeout( $deck[deck]( "updatePreview", el), 2000 );
 						}
-					}));
-				if( key === "js" ) {
-					// init preview on first go
-					setTimeout( function() {
-						$deck[deck]( "updatePreview", el );
-					}, 500 );
-				}
+					}))
+					.next() // code mirror gives us no clean way to get at DOM element
+					.addClass( val.data + "-codemirror" )
+					.attr( "data-snippet", key );
 			});
 		});
-		
+
+		setTimeout( function() {
+			initPreview( sels );
+			if( opts.jQueryCode.collapsible ) {
+				setupAccordion();
+				initPreview( sels );
+			}
+		}, 500);
 	});
 
+	function setupAccordion() {
+		var $d = $( $[deck].select );
+
+		$d.find( ".slide" ).each( function( i, el ) {
+			var $slide = $(el),
+				$snippets = $slide.find( ".CodeMirror, iframe" );
+			if( $snippets.length > 1 ) {
+				var $accor = $( "<div class='collapsibles'></div>" );
+				$snippets.each( function( i, snip ) {
+					var $snip = $(snip);
+					$accor
+						.append( "<h3>" + ( $snip.attr( "data-snippet" ) || "Result" ) + "</h3>" )
+						.append( snip );
+				});
+				$accor
+					.delegate( "h3", "click", function( evt ) {
+						$(this).next().slideToggle( 250 );
+					})
+					.appendTo( el );
+			}
+		});
+	}
+
+	function initPreview( sels ) {
+		$( $[deck].select )
+			.find( ".slide " + sels.jsSnippet )
+			.each( function( i, el ) {
+				$( $[deck].select )[deck]( "updatePreview", el );
+			});
+	}
 
 	$[deck].extend( "updatePreview", function( el ) {
 		var sels = this.options.selectors,
@@ -88,9 +125,9 @@
 				demoCss : $previewCss ? $previewCss.getValue() : ""
 			});
 		
-		// build preview with jQuery
 		preview.open();
 		preview.write( prev );
+
 	});
 
 })(jQuery, 'deck', this);
