@@ -4,8 +4,9 @@
 
 	$[deck].addOptions({
 		selectors: {
-			jqCode: ".jquery",
-			demoSnippet: ".demo"
+			jsSnippet: ".jquery",
+			htmlSnippet: ".demo",
+			cssSnippet: ".demo-css",
 		}
 	});
 
@@ -14,36 +15,42 @@
 			opts = $deck[deck]( "getOptions" ),
 			sels = opts.selectors;
 
-		$deck.find( sels.jqCode )
-			.each( function( i, el ) {
-				$(el).data( "jqCode",
+		$.each({
+			"js" : {
+				sel: sels.jsSnippet,
+				data: "jsSnippet",
+				mode: "javascript"
+			},
+			"html" : {
+				sel: sels.htmlSnippet,
+				data: "htmlSnippet",
+				mode: "text/html"
+			},
+			"css" : {
+				sel: sels.cssSnippet,
+				data: "cssSnippet",
+				mode: "text/css"
+			}
+		}, function( key, val ) {
+			$deck.find( val.sel ).each( function( i, el ) {
+				$(el).data( val.data,
 					CodeMirror.fromTextArea( el, {
-						mode: "javascript",
+						mode: val.mode,
 						tabMode: "indent",
 						onChange: function() {
-							clearTimeout( jsthrottle );
-							jsthrottle = setTimeout( $deck[deck]( "updatePreview", el ), 2000);
+							clearTimeout( throttle );
+							throttle = setTimeout( $deck[deck]( "updatePreview", el), 2000 );
 						}
 					}));
-
-				// init preview for each jqCode section
-				setTimeout( function() {
-					$deck[deck]( "updatePreview", el ), 500
-				});
+				if( key === "js" ) {
+					// init preview on first go
+					setTimeout( function() {
+						$deck[deck]( "updatePreview", el );
+					}, 500 );
+				}
 			});
-		$deck.find( sels.demoSnippet )
-			.each( function( i, el ) {
-				$(el).data( "htmlSnippet",
-					CodeMirror.fromTextArea( el, {
-						mode: "text/html",
-						tabMode: "indent",
-						onChange: function() {
-							clearTimeout( htmlthrottle );
-							htmlthrottle = setTimeout( $deck[deck]( "updatePreview", el ), 500);
-						}
-					}));
-			});
-
+		});
+		
 	});
 
 
@@ -51,8 +58,9 @@
 		var sels = this.options.selectors,
 			$previewSlide = $(el).closest( sels.slide ),
 			$previewIFrame = $previewSlide.find( "iframe" ),
-			$previewjQ = $previewSlide.find( sels.jqCode ).data( "jqCode" ),
-			$previewDemo = $previewSlide.find( sels.demoSnippet ).data( "htmlSnippet" ),
+			$previewjQ = $previewSlide.find( sels.jsSnippet ).data( "jsSnippet" ),
+			$previewDemo = $previewSlide.find( sels.htmlSnippet ).data( "htmlSnippet" ),
+			$previewCss = $previewSlide.find( sels.cssSnippet ).data( "cssSnippet" ),
 			iframeHeight;
 
 		// only build preview if both jq and demo snippet are in the slide
@@ -75,7 +83,9 @@
 		var tmpl = $( "#jqDemoTemplate" ).val(),
 			prev = $.mustache(tmpl, {
 				demoScript : $previewjQ.getValue(),
-				demoBody :  $previewDemo.getValue()
+				demoBody :  $previewDemo.getValue(),
+				// css is optional, so check for existance
+				demoCss : $previewCss ? $previewCss.getValue() : ""
 			});
 		
 		// build preview with jQuery

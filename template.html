@@ -188,6 +188,11 @@ $("table").click(function(e) {
 		</tr>
 	</table>	
 	</textarea>
+		
+	<textarea class="demo-css" data-code="text/css" >
+table{ border: 1px solid black; }
+td{ border: 1px solid red; }
+	</textarea>
 	</section>
 
 <!-- Place the following snippet at the bottom of the deck container. -->
@@ -238,6 +243,10 @@ $("table").click(function(e) {
 	<!docType html>
 	<html><head>
 			<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/themes/cupertino/jquery-ui.css" type="text/css" media="screen" charset="utf-8">
+			<link rel="stylesheet" href="extensions/jQuerycode/iframe.css" type="text/css" media="screen" charset="utf-8">
+			<style>
+				{{ demoCss }}
+			</style>
 		</head>
 	<body>
 		{{{ demoBody }}}
