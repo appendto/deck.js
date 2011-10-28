@@ -22,17 +22,20 @@
 			"JavaScript" : {
 				sel: sels.jsSnippet,
 				data: "jsSnippet",
-				mode: "javascript"
+				mode: "javascript",
+				label : "{ }"
 			},
 			"HTML" : {
 				sel: sels.htmlSnippet,
 				data: "htmlSnippet",
-				mode: "text/html"
+				mode: "text/html",
+				label: "< >"
 			},
 			"Css" : {
 				sel: sels.cssSnippet,
 				data: "cssSnippet",
-				mode: "text/css"
+				mode: "text/css",
+				label: "css"
 			}
 		}, function( key, val ) {
 			$deck.find( val.sel ).each( function( i, el ) {
@@ -47,7 +50,7 @@
 					}))
 					.next() // code mirror gives us no clean way to get at DOM element
 					.addClass( val.data + "-codemirror" )
-					.attr( "data-snippet", key );
+					.attr( "data-snippet", val.label );
 			});
 		});
 
@@ -71,12 +74,12 @@
 				$snippets.each( function( i, snip ) {
 					var $snip = $(snip);
 					$accor
-						.append( "<h3>" + ( $snip.attr( "data-snippet" ) || "Result" ) + "</h3>" )
+						.append( "<div class='action'><h3>" + ( $snip.attr( "data-snippet" ) || "demo" ) + "</h3></div>" )
 						.append( snip );
 				});
 				$accor
 					.delegate( "h3", "click", function( evt ) {
-						$(this).next().slideToggle( 250 );
+						$(this).closest(".action").next().slideToggle( 250 );
 					})
 					.appendTo( el );
 			}

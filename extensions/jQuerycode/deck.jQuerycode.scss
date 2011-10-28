@@ -1,0 +1,130 @@
+
+@mixin actions(){
+	-webkit-transition: opacity .8s ease;
+	-moz-transition: opacity .8s ease;
+	transition: opacity .8s ease;
+}
+
+@mixin box(){
+  -webkit-box-shadow: inset 0.1em 0.1em 0.15em rgba(0, 0, 0, 0.2);
+  -moz-box-shadow: inset 0.1em 0.1em 0.15em rgba(0, 0, 0, 0.2);
+  box-shadow: inset 0.1em 0.1em 0.15em rgba(0, 0, 0, 0.2);
+  background-color: rgba(33, 36, 40, 0.7);
+}
+
+.deck-container .slide iframe {
+  width: 100%;
+  height: auto;
+}
+
+
+
+/* collapsible actions */
+.deck-container .slide .collapsibles { 
+	.action {
+		position: relative;
+		height: 3.2em;
+	}
+	h3 {
+		font-size: 1.5em;
+		padding: 7px;
+		opacity: .5;
+		float: right;
+		right: 2px;
+		text-align: right;
+		cursor: pointer;
+		@include actions();
+		-webkit-border-radius: .3em;
+		-moz-border-radius: .3em;
+		border-radius: .3em;
+		@include box();
+	}
+	h3:hover {
+		opacity: 1;
+		@include actions();
+	}
+}
+
+
+/*****
+ * CodeMirror
+ *****/
+.CodeMirror {
+  line-height: 1em;
+  font-family: monospace;
+}
+
+.deck-container .CodeMirror-scroll {
+  overflow: auto;
+  max-height: 300px;
+  /* This is needed to prevent an IE[67] bug where the scrolled content
+     is visible outside of the scrolling box. */
+  position: relative;
+  padding: 0.75em 0;
+}
+
+.CodeMirror-gutter {
+  position: absolute; left: 0; top: 0;
+  z-index: 10;
+  background-color: #f7f7f7;
+  border-right: 1px solid #eee;
+  min-width: 2em;
+  height: 100%;
+}
+.CodeMirror-gutter-text {
+  color: #aaa;
+  text-align: right;
+  padding: .4em .2em .4em .4em;
+}
+.CodeMirror-lines {
+  padding: .4em;
+}
+
+.CodeMirror pre {
+  -moz-border-radius: 0;
+  -webkit-border-radius: 0;
+  -o-border-radius: 0;
+  border-radius: 0;
+  border-width: 0; margin: 0; padding: 0; background: transparent;
+  font-family: inherit;
+  font-size: inherit;
+  padding: 0; margin: 0;
+  white-space: pre;
+  word-wrap: normal;
+}
+
+.CodeMirror textarea {
+  font-family: inherit !important;
+  font-size: inherit !important;
+}
+
+.deck-container pre.CodeMirror-cursor {
+  z-index: 10;
+  position: absolute;
+  visibility: hidden;
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0;
+  border-left: 1px solid black !important;
+}
+
+.borderradius .deck-container pre.CodeMirror-cursor {
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0;
+}
+
+.deck-container .CodeMirror-focused pre.CodeMirror-cursor {
+  visibility: visible;
+}
+
+span.CodeMirror-selected {
+  background: #ccc !important;
+  color: HighlightText !important;
+}
+.CodeMirror-focused span.CodeMirror-selected {
+  background: Highlight !important;
+}
+
+.CodeMirror-matchingbracket {color: #0f0 !important;}
+.CodeMirror-nonmatchingbracket {color: #f22 !important;}
