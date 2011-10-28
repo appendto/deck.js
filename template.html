@@ -4,21 +4,21 @@
 	<meta charset="utf-8">
 	<title>Deck Skeleton</title>
 	<meta name="viewport" content="width=1024, user-scalable=no">
-	
+
 	<!-- Core and extension CSS files -->
 	<link rel="stylesheet" href="core/deck.core.css" type="text/css">
 	<link rel="stylesheet" href="extensions/status/deck.status.css" type="text/css">
 	<link rel="stylesheet" href="extensions/hash/deck.hash.css" type="text/css">
 	<link rel="stylesheet" href="extensions/goto/deck.goto.css" type="text/css">
 	<link rel="stylesheet" href="extensions/jQuerycode/deck.jQuerycode.css" type="text/css">
-	
+
 	<!-- Theme CSS files (menu swaps these out) -->
 	<link rel="stylesheet" id="style-theme-link" href="themes/style/a2dark.css">
 	<link rel="stylesheet" id="transition-theme-link" href="themes/transition/horizontal-slide.css">
 	<link rel="stylesheet" href="extensions/jQuerycode/themes/a2dark.css" type="text/css">
-	
+
 	<!-- Any other extension CSS files go here. -->
-	
+
 	<!-- Replace path with correct path to Modernizr file. -->
 	<script src="modernizr.custom.js"></script>
 </head>
@@ -36,49 +36,44 @@
 <section class="slide">
 	Code mirror demo.
 	<!-- for each JS code block create a 'jquery' classed textarea with the code you'd like to run -->
-	<textarea class="jquery" data-code="javascript">$( "#birthdate" ).datepicker();</textarea>
-	<textarea class="demo" data-code="text/html" >
+<textarea class="jquery" data-code="javascript">$( "#birthdate" ).datepicker();</textarea>
+<textarea class="demo" data-code="text/html" >
 <label for="birthdate">Birth Date<em>*</em></label>
-<input id="birthdate" />
-	</textarea>
+<input id="birthdate" /></textarea>
 </section>
 <section class="slide">
 <h2>What is this</h2>
 <p>Under normal circumstances this refers to a DOM element</p>
-	<textarea class="jquery" data-code="javascript">
-	/* Binding to an event */
-	$("a.demo").click(function() {
-		alert(this.href);
-		return false;
-	});
-	</textarea>
-	<textarea class="demo" data-code="text/html">
-	<a href="http://google.com" class="demo" >Google</a>
-	<a href="http://microsoft.com" class="demo" >Microsoft</a>
-	</textarea>
+<textarea class="jquery" data-code="javascript">
+/* Binding to an event */
+$( "a.demo" ).click( function() {
+	alert( this.href );
+	return false;
+});</textarea>
+<textarea class="demo" data-code="text/html">
+<a href="http://google.com" class="demo" >Google</a>
+<a href="http://microsoft.com" class="demo" >Microsoft</a></textarea>
 </section>
 <section class="slide">
 	<h2>What is this?</h2>
 	<p>Exception #2: $.proxy() in jQuery 1.4+</p>
-	<textarea class="jquery" data-code="javascript">
-var twitter = { 
-    userName: "elijahmanor", 
-    tweet: function() { alert("Hello " + this.userName); } }; 
- 
-/* Using event helper, bind(), or live() */ 
-$("#update1").click( twitter.tweet ); /* Undefined */ 
- 
-/* Option #1: jQuery.proxy( function, context ) */ 
-$("#update2").click( $.proxy( twitter.tweet, twitter ) ); 
- 
-/* Option #2: jQuery.proxy( context, name ) */ 
-$("#update3").click( $.proxy( twitter, "tweet" ) );
-	</textarea>
+<textarea class="jquery" data-code="javascript">
+var twitter = {
+    userName: "elijahmanor",
+    tweet: function() { alert("Hello " + this.userName); } };
+
+/* Using event helper, bind(), or live() */
+$("#update1").click( twitter.tweet ); /* Undefined */
+
+/* Option #1: jQuery.proxy( function, context ) */
+$("#update2").click( $.proxy( twitter.tweet, twitter ) );
+
+/* Option #2: jQuery.proxy( context, name ) */
+$("#update3").click( $.proxy( twitter, "tweet" ) );</textarea>
 	<textarea class="demo" data-code="text/html">
-		<input type="button" value="Update 1" id="update1" />
-		<input type="button" value="Update 2" id="update2" />
-		<input type="button" value="Update 3" id="update3" />
-	</textarea>
+<input type="button" value="Update 1" id="update1" />
+<input type="button" value="Update 2" id="update2" />
+<input type="button" value="Update 3" id="update3" /></textarea>
 	</section>
 	<section class="slide">
 	<h2>$ Object | DOM Element</h2>
@@ -87,41 +82,37 @@ $("#update3").click( $.proxy( twitter, "tweet" ) );
 	<p>
 It is common practice to wrap this in a jQuery object and save it in a variable for later use
 	</p>
-	<textarea class="jquery" data-code="javascript">
-var jQueryWrappedElement = $(this);	
-	</textarea>
+	<textarea class="jquery" data-code="javascript">var jQueryWrappedElement = $( this );</textarea>
 	<p>The confusion comes if a developer forgets if the variable refers to the jQuery Object or the DOM Element</p>
 	</section>
 
 	<section class="slide">
 	<h2>$ Object | DOM Element</h2>
 	<p>Wrapping the DOM element with the jQuery object</p>
-	<textarea class="jquery" data-code="javascript">
-$('a').click(function() { 
-    var anchor = $(this); 
- 
-    anchor.fadeOut(); 
-})	
-	</textarea>
+<textarea class="jquery" data-code="javascript">
+$( "a" ).click( function() {
+    var anchor = $( this );
+
+    anchor.fadeOut();
+});</textarea>
 	</section>
 
 	<section class="slide">
-	
+
 	<h2>$ Object | DOM Element</h2>
 	<p>Unwrapping the DOM element from the jQuery object</p>
-	<textarea class="jquery" data-code="javascript">
-//Gets collection of anchor tags from jQuery array 
-$('a').get(); 
- 
-//Get method returning jQuery array & indexing 0th item 
-$('a').get()[0]; 
- 
-//Get method accessing DOM element at 0th index 
-$('a').get(0); 
- 
-//Array accessor syntax getting the 0th indexed item 
-$('a')[0];	
-	</textarea>
+<textarea class="jquery" data-code="javascript">
+//Gets collection of anchor tags from jQuery array
+$( "a" ).get();
+
+//Get method returning jQuery array & indexing 0th item
+$( "a" ).get()[ 0 ];
+
+//Get method accessing DOM element at 0th index
+$( "a" ).get( 0 );
+
+//Array accessor syntax getting the 0th indexed item
+$( "a" )[ 0 ];</textarea>
 	</section>
 
 	<section class="slide">
@@ -135,64 +126,59 @@ $('a')[0];
 		</li>
 		<li>In order to be a proficient jQuery developer, you must know the full extent of jQuery's powerful selectors</li>
 	</ul>
-	
+
 	</section>
 
 	<section class="slide">
-	
+
 	<h2>3. Knowing Selectors</h2>
 	<p>Simple Selectors</p>
-	<textarea class="jquery" data-code="javascript">
-//Selects all the anchor tags in the DOM 
-$('a') 
- 
-//Selects all the anchor tags inside of div elements in the DOM 
-$('div a') 
- 
-//Selects all the tr elements with a class of 'odd' 
-$('tr.odd')	
-	</textarea>
+<textarea class="jquery" data-code="javascript">
+//Selects all the anchor tags in the DOM
+$( "a" )
+
+//Selects all the anchor tags inside of div elements in the DOM
+$( "div a" )
+
+//Selects all the tr elements with a class of 'odd'
+$( "tr.odd" )
+</textarea>
 	</section>
 
 	<section class="slide">
-	
+
 	<h2>3. Knowing Selectors</h2>
 	<p>Uncommon Selectors</p>
-	<textarea class="jquery" data-code="javascript">
-//Selects all links that ends with mp3 in the href 
-$("a[href$='mp3']")  
- 
-//Selects all links that are set to open a new window 
-$("a[target='_blank']")  
- 
-//Selects all links that have a class that begins with "custom" 
-$("a[class^='custom']")	
-	</textarea>
+<textarea class="jquery" data-code="javascript">
+//Selects all links that ends with mp3 in the href
+$( "a[href$='mp3']" )
 
+//Selects all links that are set to open a new window
+$( "a[target='_blank']" )
+
+//Selects all links that have a class that begins with "custom"
+$( "a[class^='custom']" )
+</textarea>
 	</section>
-
 
 	<section class="slide">
 	<h2>Do's and Dont's of Events</h2>
 	<h3>Event bubbling</h3>
-	<textarea class="jquery" data-code="javascript">
-$("table").click(function(e) { 
-    alert("You clicked the " + e.target.nodeName + "!"); 
-});	
-	</textarea>
-	<textarea class="demo" data-code="text/html">
-	<table class="demo" cellpadding="25" cellspacing="25">
-		<tr>
-			<td>jQuery</td>
-			<td>Rocks!</td>
-		</tr>
-	</table>	
-	</textarea>
-		
-	<textarea class="demo-css" data-code="text/css" >
-table{ border: 1px solid black; }
-td{ border: 1px solid red; }
-	</textarea>
+<textarea class="jquery" data-code="javascript">
+$( "table" ).click( function( e ) {
+    alert( "You clicked the " + e.target.nodeName + "!" );
+});</textarea>
+<textarea class="demo" data-code="text/html">
+<table class="demo" cellpadding="25" cellspacing="25">
+	<tr>
+		<td>jQuery</td>
+		<td>Rocks!</td>
+	</tr>
+</table></textarea>
+
+<textarea class="demo-css" data-code="text/css" >
+table { border: 1px solid black; }
+td { border: 1px solid red; }</textarea>
 	</section>
 
 <!-- Place the following snippet at the bottom of the deck container. -->
@@ -201,7 +187,6 @@ td{ border: 1px solid red; }
 	/
 	<span class="deck-status-total"></span>
 </p>
-
 
 <!-- Place the following snippet at the bottom of the deck container. -->
 <form action="." method="get" class="goto-form">
@@ -214,7 +199,7 @@ td{ border: 1px solid red; }
 
 <!-- Update these paths to point to the correct files. -->
 <script src="jquery-1.6.4.min.js"></script>
-<script src="jquery-ui-1.8.16.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js"></script>
 <script src="core/deck.core.js"></script>
 <script src="extensions/status/deck.status.js"></script>
 <script src="extensions/hash/deck.hash.js"></script>

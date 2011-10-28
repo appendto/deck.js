@@ -191,6 +191,7 @@ body {
 .deck-container .slide .CodeMirror,
 .deck-container .slide .snippet-container,
 .deck-container .slide iframe {
+  width: 820px;
   margin: .75em 0 1.5em;
   padding: .5em 1em;
   display: block;
