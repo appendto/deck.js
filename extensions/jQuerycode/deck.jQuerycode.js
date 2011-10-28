@@ -42,6 +42,7 @@
 				$(el).data( val.data,
 					CodeMirror.fromTextArea( el, {
 						mode: val.mode,
+						lineNumbers: true,
 						tabMode: "indent",
 						onChange: function() {
 							clearTimeout( throttle );

@@ -33,6 +33,10 @@ body {
 	font-size: 100%;
 }
 
+body.deck-container {
+	width: 80%;
+}
+
 
 /* media queries to optimize font size based upon device settings */
 @media only screen and ( max-width: 2240px ) { /* ( 2560 - 1920 / 2 ) + 1920 */
@@ -115,6 +119,11 @@ body {
 		font-family: Georgia, sans-serif;
 		font-weight: normal;
 		font-style: italic;
+	}
+	header > h2 {
+		border: none;
+		padding: 0;
+		margin: 0;
 	}
 }
 

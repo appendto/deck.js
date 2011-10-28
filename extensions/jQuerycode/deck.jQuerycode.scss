@@ -63,18 +63,25 @@
   padding: 0.75em 0;
 }
 
-.CodeMirror-gutter {
+.deck-container .CodeMirror-gutter {
   position: absolute; left: 0; top: 0;
-  z-index: 10;
-  background-color: #f7f7f7;
-  border-right: 1px solid #eee;
-  min-width: 2em;
+  z-index: 20;
+  min-width: 1em;
   height: 100%;
+  padding-right: .3em;
+  .CodeMirror-gutter-text
+  {
+    color: #aaa;
+    text-align: right;
+    pre {
+      border-right: 1px solid #777;
+	  padding-right: 0.3em;
+    }
+  }
 }
 .CodeMirror-gutter-text {
   color: #aaa;
   text-align: right;
-  padding: .4em .2em .4em .4em;
 }
 .CodeMirror-lines {
   padding: .4em;
