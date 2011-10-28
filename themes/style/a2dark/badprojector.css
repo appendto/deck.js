@@ -1,3 +1,5 @@
+/* basic colors */
+/* dark theme css */
 /* mixins */
 .deck-container .slide a:hover {
   color: #ffffb5;
@@ -9,7 +11,7 @@
 @import url(fonts/nevis/stylesheet.css);
 /* Styles */
 html {
-  background-color: #34363a; }
+  background-color: #3e4042; }
 
 html, body {
   margin: 0;
@@ -60,7 +62,7 @@ body.deck-container {
     font-size: 25%; } }
 /* deck slide styles */
 .deck-container {
-  background-color: #34363a;
+  background-color: #3e4042;
   color: #fafafa; }
 
 /* slide headers */
@@ -195,13 +197,10 @@ body.deck-container {
   font-size: 1em;
   letter-spacing: -0.05em; }
 
-.deck-container .slide .CodeMirror,
-.deck-container .slide .snippet-container,
-.deck-container .slide iframe {
+.deck-container .slide .CodeMirror, .deck-container .slide .snippet-container, .deck-container .slide iframe {
   margin: .75em 0 1.5em;
   padding: .5em 1em;
   display: block;
-  border: 1px dashed #717171;
   -webkit-border-radius: .15em;
   -moz-border-radius: .15em;
   border-radius: .15em;

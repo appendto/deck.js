@@ -51,7 +51,6 @@
   top: 0;
   z-index: 20;
   min-width: 1em;
-  height: 100%;
   padding-right: .3em; }
   .deck-container .CodeMirror-gutter .CodeMirror-gutter-text {
     color: #aaa;
