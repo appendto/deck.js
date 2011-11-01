@@ -18,7 +18,7 @@ that use the API provided by core.
 (function($, deck, document, undefined) {
 	var $d = $(document);
 
-	$.widget( [deck] + "." + [deck], { // add our own namespace, stay out of jQuery's
+	$.widget( deck + "." + deck, { // add our own namespace, stay out of jQuery's
 		options: {
 			classes: {
 				after: 'deck-after',
