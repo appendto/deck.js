@@ -106,17 +106,9 @@ that use the API provided by core.
 			// Hide the deck while states are being applied to kill transitions
 			$c.addClass(options.classes.loading);
 			
-			// Fill slides array depending on parameter type
-			if ($.isArray(elements)) {
-				$.each(elements, function(i, e) {
-					slides.push($(e));
-				});
-			}
-			else {
-				$(elements).each(function(i, e) {
-					slides.push($(e));
-				});
-			}
+			$(elements).each(function(i, e) {
+				slides.push($(e));
+			});
 			
 			/* Remove any previous bindings, and rebind key events */
 			$d.unbind('keydown.deck').bind('keydown.deck', function(e) {
